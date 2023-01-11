@@ -1,4 +1,5 @@
 import { graphql } from "gatsby";
+import { GatsbyImage, getImage } from "gatsby-plugin-image";
 import React from "react";
 import Layout from "../../components/layout";
 import Seo from "../../components/Seo";
@@ -9,11 +10,14 @@ interface IBlogPostProps {
 }
 
 export default function BlogPost({data, children} : IBlogPostProps){
-    return (
-        <Layout title="">
-            <div>{children}</div>
-        </Layout>
-    );
+  const image = getImage(data.mdx?.frontmatter?.headerImage?.childImageSharp?.gatsbyImageData!);
+
+  return (
+      <Layout title="">
+        <GatsbyImage image={image as any} alt={data.mdx?.frontmatter?.title!} />
+          <div>{children}</div>
+      </Layout>
+  );
 }
 
 export const query = graphql`
@@ -25,6 +29,11 @@ export const query = graphql`
         date
         title
         slug
+        headerImage {
+          childImageSharp {
+            gatsbyImageData(height:500, placeholder: BLURRED)
+          }
+        }
       }
     }
   }
